@@ -1,0 +1,47 @@
+{
+  "name": "rtsp-relay-server",
+  "version": "1.0.0",
+  "description": "RTSP relay server with multi-stream layout capabilities and user management",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:migrate": "node dist/db/migrate.js",
+    "test": "jest"
+  },
+  "keywords": ["rtsp", "streaming", "video", "relay"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "ws": "^8.14.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "node-rtsp-stream": "^0.0.9",
+    "uuid": "^9.0.1",
+    "joi": "^17.11.0",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/pg": "^8.10.9",
+    "@types/ws": "^8.5.10",
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/uuid": "^9.0.7",
+    "@types/morgan": "^1.9.9",
+    "typescript": "^5.3.3",
+    "nodemon": "^3.0.2",
+    "ts-node": "^10.9.2",
+    "@types/cors": "^2.8.17"
+  }
+}

@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: rtsp_relay_db
+    environment:
+      POSTGRES_DB: rtsp_relay
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rtsp_relay_backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: rtsp_relay
+      DB_USER: postgres
+      DB_PASSWORD: postgres123
+      JWT_SECRET: your-production-secret-change-this-in-production
+      JWT_EXPIRES_IN: 24h
+      RTSP_OUTPUT_BASE_PORT: 8554
+      RTSP_MAX_STREAMS: 50
+      FFMPEG_PATH: /usr/bin/ffmpeg
+      FFPROBE_PATH: /usr/bin/ffprobe
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: admin123
+    ports:
+      - "3000:3000"
+      - "8554-8654:8554-8654"  # RTSP output ports
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rtsp_relay_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
